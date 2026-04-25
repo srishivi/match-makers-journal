@@ -33,8 +33,11 @@ export interface BioData {
   // Layout
   photoPosition: "left" | "right";
 
-  // Extra gallery images (each shown on its own landscape PDF page)
+  // Extra gallery images
   gallery: string[];
+
+  // How gallery is rendered in PDF
+  galleryLayout: "one-per-page" | "collage";
 }
 
 export const emptyBioData: BioData = {
@@ -63,6 +66,7 @@ export const emptyBioData: BioData = {
   aboutMe: "",
   photoPosition: "right",
   gallery: [],
+  galleryLayout: "one-per-page",
 };
 
 const STORAGE_KEY = "marriage-biodata-v1";
