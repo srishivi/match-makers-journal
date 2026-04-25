@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, User } from "lucide-react";
+import { Upload, User, X, Images } from "lucide-react";
 
 interface Props {
   data: BioData;
@@ -33,43 +33,55 @@ const Field = ({
 
 export const BioDataForm = ({ data, onChange }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const set = <K extends keyof BioData>(k: K, v: BioData[K]) =>
     onChange({ ...data, [k]: v });
 
-  const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File, maxDim = 1600, quality = 0.85): Promise<string> =>
+    new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > height && width > maxDim) {
+            height = (height * maxDim) / width;
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = (width * maxDim) / height;
+            height = maxDim;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return resolve(reader.result as string);
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => resolve(reader.result as string);
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+
+  const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const compressed = await compressImage(file, 800, 0.85);
+    set("photo", compressed);
+  };
 
-    // Compress/resize any size image to keep localStorage manageable
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const maxDim = 800;
-        let { width, height } = img;
-        if (width > height && width > maxDim) {
-          height = (height * maxDim) / width;
-          width = maxDim;
-        } else if (height > maxDim) {
-          width = (width * maxDim) / height;
-          height = maxDim;
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          set("photo", reader.result as string);
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-        const compressed = canvas.toDataURL("image/jpeg", 0.85);
-        set("photo", compressed);
-      };
-      img.onerror = () => set("photo", reader.result as string);
-      img.src = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  const handleGallery = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const compressed = await Promise.all(files.map((f) => compressImage(f, 1600, 0.85)));
+    set("gallery", [...(data.gallery || []), ...compressed]);
+    if (galleryRef.current) galleryRef.current.value = "";
+  };
+
+  const removeGalleryImage = (idx: number) => {
+    set("gallery", (data.gallery || []).filter((_, i) => i !== idx));
   };
 
   return (
@@ -127,7 +139,49 @@ export const BioDataForm = ({ data, onChange }: Props) => {
         </div>
       </section>
 
-      {/* Personal */}
+      {/* Additional Photos */}
+      <section>
+        <SectionTitle>Additional Photos</SectionTitle>
+        <p className="text-sm text-muted-foreground mb-3">
+          Each uploaded image will appear on its own landscape page in the PDF.
+        </p>
+        <input
+          ref={galleryRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleGallery}
+          className="hidden"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => galleryRef.current?.click()}
+          className="border-maroon text-maroon hover:bg-maroon hover:text-cream"
+        >
+          <Images className="w-4 h-4 mr-2" />
+          Upload Images
+        </Button>
+        {data.gallery && data.gallery.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {data.gallery.map((src, i) => (
+              <div key={i} className="relative group border-2 border-gold rounded-md overflow-hidden bg-cream aspect-[4/3]">
+                <img src={src} alt={`upload-${i}`} className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeGalleryImage(i)}
+                  className="absolute top-1 right-1 bg-maroon text-cream rounded-full p-1 opacity-90 hover:opacity-100"
+                  aria-label="Remove image"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+
       <section>
         <SectionTitle>Personal Details</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
