@@ -29,6 +29,9 @@ export interface BioData {
 
   // About
   aboutMe: string;
+
+  // Layout
+  photoPosition: "left" | "right";
 }
 
 export const emptyBioData: BioData = {
