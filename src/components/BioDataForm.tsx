@@ -122,6 +122,20 @@ export const BioDataForm = ({ data, onChange }: Props) => {
           <Field label="Caste / Community">
             <Input value={data.caste} onChange={(e) => set("caste", e.target.value)} placeholder="e.g. Brahmin" />
           </Field>
+          <Field label="Manglik">
+            <Select value={data.manglik} onValueChange={(v) => set("manglik", v)}>
+              <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+                <SelectItem value="Anshik (Partial)">Anshik (Partial)</SelectItem>
+                <SelectItem value="Don't Know">Don't Know</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field label="Place of Birth">
+            <Input value={data.placeOfBirth} onChange={(e) => set("placeOfBirth", e.target.value)} placeholder="e.g. Pune, Maharashtra" />
+          </Field>
           <Field label="Contact Number">
             <Input value={data.contact} onChange={(e) => set("contact", e.target.value)} placeholder="+91 ..." />
           </Field>
