@@ -2,95 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Royal Maroon & Gold palette */
+    --background: 38 50% 96%;
+    --foreground: 15 45% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 38 60% 98%;
+    --card-foreground: 15 45% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 38 60% 98%;
+    --popover-foreground: 15 45% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 351 58% 30%;
+    --primary-foreground: 38 60% 96%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 45 60% 90%;
+    --secondary-foreground: 351 58% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 38 30% 92%;
+    --muted-foreground: 15 20% 35%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 55% 54%;
+    --accent-foreground: 15 45% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 45 30% 80%;
+    --input: 45 30% 85%;
+    --ring: 351 58% 30%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Brand specifics */
+    --maroon: 351 58% 30%;
+    --maroon-deep: 351 60% 22%;
+    --gold: 45 55% 54%;
+    --gold-soft: 45 70% 75%;
+    --cream: 38 50% 96%;
+    --ink: 15 45% 12%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --gradient-royal: linear-gradient(135deg, hsl(var(--maroon)) 0%, hsl(var(--maroon-deep)) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(45 60% 60%) 0%, hsl(40 65% 45%) 100%);
+    --shadow-royal: 0 20px 60px -20px hsl(var(--maroon) / 0.35);
+    --shadow-soft: 0 4px 20px -4px hsl(var(--maroon) / 0.15);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 15 30% 8%;
+    --foreground: 38 60% 96%;
+    --card: 15 30% 10%;
+    --card-foreground: 38 60% 96%;
+    --popover: 15 30% 10%;
+    --popover-foreground: 38 60% 96%;
+    --primary: 45 55% 54%;
+    --primary-foreground: 15 45% 12%;
+    --secondary: 351 30% 20%;
+    --secondary-foreground: 38 60% 96%;
+    --muted: 15 20% 15%;
+    --muted-foreground: 38 20% 70%;
+    --accent: 351 58% 40%;
+    --accent-foreground: 38 60% 96%;
+    --border: 15 20% 20%;
+    --input: 15 20% 20%;
+    --ring: 45 55% 54%;
   }
 }
 
@@ -101,5 +77,96 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .font-display {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  /* Ornamental border for the bio-data card */
+  .ornate-border {
+    position: relative;
+    background: hsl(var(--cream));
+    border: 2px solid hsl(var(--gold));
+    box-shadow: 
+      inset 0 0 0 6px hsl(var(--cream)),
+      inset 0 0 0 7px hsl(var(--maroon) / 0.4),
+      var(--shadow-royal);
+  }
+
+  .ornate-border::before,
+  .ornate-border::after {
+    content: '❦';
+    position: absolute;
+    color: hsl(var(--maroon));
+    font-size: 1.5rem;
+    background: hsl(var(--cream));
+    padding: 0 0.5rem;
+  }
+
+  .ornate-border::before {
+    top: -0.85rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .ornate-border::after {
+    bottom: -0.85rem;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+  }
+
+  .corner-deco {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid hsl(var(--maroon));
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed hsl(var(--gold) / 0.4);
+  }
+
+  .field-row:last-child {
+    border-bottom: none;
+  }
+
+  .field-label {
+    font-weight: 600;
+    color: hsl(var(--maroon));
+    font-family: 'Playfair Display', serif;
+  }
+
+  .field-value {
+    color: hsl(var(--ink));
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    color: hsl(var(--maroon));
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-align: center;
+    margin: 1.5rem 0 0.75rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .section-heading::before,
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, hsl(var(--gold)), transparent);
   }
 }
