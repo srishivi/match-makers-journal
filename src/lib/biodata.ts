@@ -58,6 +58,7 @@ export const emptyBioData: BioData = {
   nativeCity: "",
   currentAddress: "",
   aboutMe: "",
+  photoPosition: "right",
 };
 
 const STORAGE_KEY = "marriage-biodata-v1";
