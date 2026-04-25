@@ -39,12 +39,36 @@ export const BioDataForm = ({ data, onChange }: Props) => {
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 3 * 1024 * 1024) {
-      alert("Please choose a photo under 3MB");
-      return;
-    }
+
+    // Compress/resize any size image to keep localStorage manageable
     const reader = new FileReader();
-    reader.onload = () => set("photo", reader.result as string);
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 800;
+        let { width, height } = img;
+        if (width > height && width > maxDim) {
+          height = (height * maxDim) / width;
+          width = maxDim;
+        } else if (height > maxDim) {
+          width = (width * maxDim) / height;
+          height = maxDim;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          set("photo", reader.result as string);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL("image/jpeg", 0.85);
+        set("photo", compressed);
+      };
+      img.onerror = () => set("photo", reader.result as string);
+      img.src = reader.result as string;
+    };
     reader.readAsDataURL(file);
   };
 
