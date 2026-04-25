@@ -33,6 +33,37 @@ const Field = ({
 
 export const BioDataForm = ({ data, onChange }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
+  const set = <K extends keyof BioData>(k: K, v: BioData[K]) =>
+    onChange({ ...data, [k]: v });
+
+  const compressImage = (file: File, maxDim = 1600, quality = 0.85): Promise<string> =>
+    new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > height && width > maxDim) {
+            height = (height * maxDim) / width;
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = (width * maxDim) / height;
+            height = maxDim;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return resolve(reader.result as string);
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => resolve(reader.result as string);
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
   const set = <K extends keyof BioData>(k: K, v: BioData[K]) =>
     onChange({ ...data, [k]: v });
 
