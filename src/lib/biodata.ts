@@ -29,6 +29,9 @@ export interface BioData {
 
   // About
   aboutMe: string;
+
+  // Layout
+  photoPosition: "left" | "right";
 }
 
 export const emptyBioData: BioData = {
@@ -55,6 +58,7 @@ export const emptyBioData: BioData = {
   nativeCity: "",
   currentAddress: "",
   aboutMe: "",
+  photoPosition: "right",
 };
 
 const STORAGE_KEY = "marriage-biodata-v1";

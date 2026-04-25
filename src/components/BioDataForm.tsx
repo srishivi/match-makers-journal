@@ -114,6 +114,17 @@ export const BioDataForm = ({ data, onChange }: Props) => {
             )}
           </div>
         </div>
+        <div className="mt-4 max-w-xs">
+          <Field label="Photo Position (in PDF)">
+            <Select value={data.photoPosition} onValueChange={(v) => set("photoPosition", v as "left" | "right")}>
+              <SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="left">Left of About Me</SelectItem>
+                <SelectItem value="right">Right of About Me</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+        </div>
       </section>
 
       {/* Personal */}

@@ -52,7 +52,7 @@ export const BioDataPreview = forwardRef<HTMLDivElement, Props>(({ data }, ref) 
         </div>
 
         {/* Name + Photo */}
-        <div className="flex gap-6 items-center mb-2">
+        <div className={`flex gap-6 items-center mb-2 ${data.photoPosition === "left" ? "flex-row-reverse" : ""}`}>
           <div className="flex-1 text-center">
             <div className="font-display text-3xl text-maroon font-bold leading-tight">
               {data.name || "—"}
