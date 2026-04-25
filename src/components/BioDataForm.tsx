@@ -139,7 +139,49 @@ export const BioDataForm = ({ data, onChange }: Props) => {
         </div>
       </section>
 
-      {/* Personal */}
+      {/* Additional Photos */}
+      <section>
+        <SectionTitle>Additional Photos</SectionTitle>
+        <p className="text-sm text-muted-foreground mb-3">
+          Each uploaded image will appear on its own landscape page in the PDF.
+        </p>
+        <input
+          ref={galleryRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleGallery}
+          className="hidden"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => galleryRef.current?.click()}
+          className="border-maroon text-maroon hover:bg-maroon hover:text-cream"
+        >
+          <Images className="w-4 h-4 mr-2" />
+          Upload Images
+        </Button>
+        {data.gallery && data.gallery.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {data.gallery.map((src, i) => (
+              <div key={i} className="relative group border-2 border-gold rounded-md overflow-hidden bg-cream aspect-[4/3]">
+                <img src={src} alt={`upload-${i}`} className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeGalleryImage(i)}
+                  className="absolute top-1 right-1 bg-maroon text-cream rounded-full p-1 opacity-90 hover:opacity-100"
+                  aria-label="Remove image"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+
       <section>
         <SectionTitle>Personal Details</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
