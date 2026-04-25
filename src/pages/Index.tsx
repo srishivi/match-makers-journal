@@ -70,6 +70,36 @@ const Index = () => {
       const x = (pageWidth - imgWidth) / 2;
       const y = (pageHeight - imgHeight) / 2;
       pdf.addImage(imgData, "JPEG", x, y, imgWidth, imgHeight);
+
+      // Add each gallery image as its own landscape page
+      const gallery = data.gallery || [];
+      for (const src of gallery) {
+        await new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            pdf.addPage("a4", "landscape");
+            const pw = pdf.internal.pageSize.getWidth();
+            const ph = pdf.internal.pageSize.getHeight();
+            const margin = 8;
+            const maxW = pw - margin * 2;
+            const maxH = ph - margin * 2;
+            const ratio = img.width / img.height;
+            let w = maxW;
+            let h = maxW / ratio;
+            if (h > maxH) {
+              h = maxH;
+              w = maxH * ratio;
+            }
+            const ix = (pw - w) / 2;
+            const iy = (ph - h) / 2;
+            pdf.addImage(src, "JPEG", ix, iy, w, h);
+            resolve();
+          };
+          img.onerror = () => resolve();
+          img.src = src;
+        });
+      }
+
       const filename = `${(data.name || "bio-data").replace(/\s+/g, "_")}_BioData.pdf`;
       pdf.save(filename);
       toast.success("PDF downloaded");
