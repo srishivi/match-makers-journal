@@ -64,43 +64,24 @@ export const BioDataForm = ({ data, onChange }: Props) => {
       };
       reader.readAsDataURL(file);
     });
-  const set = <K extends keyof BioData>(k: K, v: BioData[K]) =>
-    onChange({ ...data, [k]: v });
 
-  const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const compressed = await compressImage(file, 800, 0.85);
+    set("photo", compressed);
+  };
 
-    // Compress/resize any size image to keep localStorage manageable
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const maxDim = 800;
-        let { width, height } = img;
-        if (width > height && width > maxDim) {
-          height = (height * maxDim) / width;
-          width = maxDim;
-        } else if (height > maxDim) {
-          width = (width * maxDim) / height;
-          height = maxDim;
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          set("photo", reader.result as string);
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-        const compressed = canvas.toDataURL("image/jpeg", 0.85);
-        set("photo", compressed);
-      };
-      img.onerror = () => set("photo", reader.result as string);
-      img.src = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  const handleGallery = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const compressed = await Promise.all(files.map((f) => compressImage(f, 1600, 0.85)));
+    set("gallery", [...(data.gallery || []), ...compressed]);
+    if (galleryRef.current) galleryRef.current.value = "";
+  };
+
+  const removeGalleryImage = (idx: number) => {
+    set("gallery", (data.gallery || []).filter((_, i) => i !== idx));
   };
 
   return (
