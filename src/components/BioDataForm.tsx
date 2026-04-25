@@ -143,8 +143,22 @@ export const BioDataForm = ({ data, onChange }: Props) => {
       <section>
         <SectionTitle>Additional Photos</SectionTitle>
         <p className="text-sm text-muted-foreground mb-3">
-          Each uploaded image will appear on its own landscape page in the PDF.
+          Choose how the uploaded images appear in the PDF.
         </p>
+        <div className="max-w-xs mb-4">
+          <Field label="Gallery Layout (in PDF)">
+            <Select
+              value={data.galleryLayout}
+              onValueChange={(v) => set("galleryLayout", v as "one-per-page" | "collage")}
+            >
+              <SelectTrigger><SelectValue placeholder="Select layout" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="one-per-page">One image per page (landscape)</SelectItem>
+                <SelectItem value="collage">Collage on a single page</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+        </div>
         <input
           ref={galleryRef}
           type="file"
