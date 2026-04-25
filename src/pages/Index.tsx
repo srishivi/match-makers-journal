@@ -71,33 +71,70 @@ const Index = () => {
       const y = (pageHeight - imgHeight) / 2;
       pdf.addImage(imgData, "JPEG", x, y, imgWidth, imgHeight);
 
-      // Add each gallery image as its own landscape page
+      // Add gallery images according to chosen layout
       const gallery = data.gallery || [];
-      for (const src of gallery) {
-        await new Promise<void>((resolve) => {
+      const layout = data.galleryLayout || "one-per-page";
+
+      const loadImg = (src: string) =>
+        new Promise<HTMLImageElement | null>((resolve) => {
           const img = new Image();
-          img.onload = () => {
-            pdf.addPage("a4", "landscape");
-            const pw = pdf.internal.pageSize.getWidth();
-            const ph = pdf.internal.pageSize.getHeight();
-            const margin = 8;
-            const maxW = pw - margin * 2;
-            const maxH = ph - margin * 2;
-            const ratio = img.width / img.height;
-            let w = maxW;
-            let h = maxW / ratio;
-            if (h > maxH) {
-              h = maxH;
-              w = maxH * ratio;
-            }
-            const ix = (pw - w) / 2;
-            const iy = (ph - h) / 2;
-            pdf.addImage(src, "JPEG", ix, iy, w, h);
-            resolve();
-          };
-          img.onerror = () => resolve();
+          img.onload = () => resolve(img);
+          img.onerror = () => resolve(null);
           img.src = src;
         });
+
+      if (layout === "one-per-page") {
+        for (const src of gallery) {
+          const img = await loadImg(src);
+          if (!img) continue;
+          pdf.addPage("a4", "landscape");
+          const pw = pdf.internal.pageSize.getWidth();
+          const ph = pdf.internal.pageSize.getHeight();
+          const margin = 8;
+          const maxW = pw - margin * 2;
+          const maxH = ph - margin * 2;
+          const ratio = img.width / img.height;
+          let w = maxW;
+          let h = maxW / ratio;
+          if (h > maxH) {
+            h = maxH;
+            w = maxH * ratio;
+          }
+          const ix = (pw - w) / 2;
+          const iy = (ph - h) / 2;
+          pdf.addImage(src, "JPEG", ix, iy, w, h);
+        }
+      } else if (layout === "collage" && gallery.length > 0) {
+        // Collage: one landscape page, grid of images
+        pdf.addPage("a4", "landscape");
+        const pw = pdf.internal.pageSize.getWidth();
+        const ph = pdf.internal.pageSize.getHeight();
+        const margin = 8;
+        const gap = 4;
+        const n = gallery.length;
+        const cols = Math.ceil(Math.sqrt(n));
+        const rows = Math.ceil(n / cols);
+        const cellW = (pw - margin * 2 - gap * (cols - 1)) / cols;
+        const cellH = (ph - margin * 2 - gap * (rows - 1)) / rows;
+
+        for (let i = 0; i < n; i++) {
+          const img = await loadImg(gallery[i]);
+          if (!img) continue;
+          const r = Math.floor(i / cols);
+          const c = i % cols;
+          const cellX = margin + c * (cellW + gap);
+          const cellY = margin + r * (cellH + gap);
+          const ratio = img.width / img.height;
+          let w = cellW;
+          let h = cellW / ratio;
+          if (h > cellH) {
+            h = cellH;
+            w = cellH * ratio;
+          }
+          const ix = cellX + (cellW - w) / 2;
+          const iy = cellY + (cellH - h) / 2;
+          pdf.addImage(gallery[i], "JPEG", ix, iy, w, h);
+        }
       }
 
       const filename = `${(data.name || "bio-data").replace(/\s+/g, "_")}_BioData.pdf`;
