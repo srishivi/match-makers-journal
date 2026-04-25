@@ -6,6 +6,8 @@ export interface BioData {
   maritalStatus: string;
   religion: string;
   caste: string;
+  manglik: string;
+  placeOfBirth: string;
   contact: string;
   email: string;
   photo: string; // base64
@@ -36,6 +38,8 @@ export const emptyBioData: BioData = {
   maritalStatus: "",
   religion: "",
   caste: "",
+  manglik: "",
+  placeOfBirth: "",
   contact: "",
   email: "",
   photo: "",

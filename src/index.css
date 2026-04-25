@@ -128,10 +128,11 @@
 
   .field-row {
     display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 1rem;
-    padding: 0.5rem 0;
+    grid-template-columns: 170px 1fr;
+    gap: 0.75rem;
+    padding: 0.3rem 0;
     border-bottom: 1px dashed hsl(var(--gold) / 0.4);
+    font-size: 0.9rem;
   }
 
   .field-row:last-child {
@@ -152,9 +153,9 @@
     font-family: 'Playfair Display', serif;
     color: hsl(var(--maroon));
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     text-align: center;
-    margin: 1.5rem 0 0.75rem;
+    margin: 0.85rem 0 0.4rem;
     position: relative;
     display: flex;
     align-items: center;

@@ -30,41 +30,40 @@ const formatDate = (iso: string) => {
 
 export const BioDataPreview = forwardRef<HTMLDivElement, Props>(({ data }, ref) => {
   return (
-    <div ref={ref} className="bg-cream p-4">
-      <div className="ornate-border p-10 relative" style={{ minHeight: "1100px" }}>
+    <div ref={ref} className="bg-cream p-3">
+      <div className="ornate-border p-7 relative" style={{ minHeight: "1080px" }}>
         {/* corner decorations */}
-        <div className="corner-deco border-r-0 border-b-0 top-3 left-3" />
-        <div className="corner-deco border-l-0 border-b-0 top-3 right-3" />
-        <div className="corner-deco border-r-0 border-t-0 bottom-3 left-3" />
-        <div className="corner-deco border-l-0 border-t-0 bottom-3 right-3" />
+        <div className="corner-deco border-r-0 border-b-0 top-2 left-2" />
+        <div className="corner-deco border-l-0 border-b-0 top-2 right-2" />
+        <div className="corner-deco border-r-0 border-t-0 bottom-2 left-2" />
+        <div className="corner-deco border-l-0 border-t-0 bottom-2 right-2" />
 
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="text-gold text-2xl mb-2">॥ ॐ ॥</div>
-          <h1 className="font-display text-4xl font-bold text-maroon tracking-wide">
+        <div className="text-center mb-3">
+          <div className="text-gold text-xl">॥ ॐ ॥</div>
+          <h1 className="font-display text-3xl font-bold text-maroon tracking-wide">
             Bio-Data
           </h1>
-          <div className="flex items-center justify-center gap-3 mt-2">
-            <span className="h-px w-16 bg-gold" />
-            <span className="text-gold text-sm">✦</span>
-            <span className="h-px w-16 bg-gold" />
+          <div className="flex items-center justify-center gap-3 mt-1">
+            <span className="h-px w-14 bg-gold" />
+            <span className="text-gold text-xs">✦</span>
+            <span className="h-px w-14 bg-gold" />
           </div>
         </div>
 
         {/* Name + Photo */}
-        <div className="flex gap-8 items-start mb-4">
-          <div className="flex-1">
-            <div className="text-sm uppercase tracking-widest text-maroon/70 mb-1">Name</div>
-            <div className="font-display text-3xl text-maroon font-bold">
+        <div className="flex gap-6 items-center mb-2">
+          <div className="flex-1 text-center">
+            <div className="font-display text-3xl text-maroon font-bold leading-tight">
               {data.name || "—"}
             </div>
             {data.aboutMe && (
-              <p className="mt-4 text-sm leading-relaxed text-ink/80 italic">
+              <p className="mt-2 text-[13px] leading-snug text-ink/80 italic">
                 "{data.aboutMe}"
               </p>
             )}
           </div>
-          <div className="w-36 h-44 border-2 border-maroon p-1 bg-cream shrink-0">
+          <div className="w-32 h-40 border-2 border-maroon p-1 bg-cream shrink-0">
             <div className="w-full h-full border border-gold overflow-hidden bg-secondary flex items-center justify-center">
               {data.photo ? (
                 <img src={data.photo} alt={data.name} className="w-full h-full object-cover" crossOrigin="anonymous" />
@@ -79,10 +78,12 @@ export const BioDataPreview = forwardRef<HTMLDivElement, Props>(({ data }, ref) 
         <SectionHeading>Personal Details</SectionHeading>
         <div>
           <Row label="Date of Birth" value={formatDate(data.dateOfBirth)} />
+          <Row label="Place of Birth" value={data.placeOfBirth} />
           <Row label="Height" value={data.height} />
           <Row label="Marital Status" value={data.maritalStatus} />
           <Row label="Religion" value={data.religion} />
           <Row label="Caste / Community" value={data.caste} />
+          <Row label="Manglik" value={data.manglik} />
         </div>
 
         {/* Education & Career */}
@@ -112,8 +113,8 @@ export const BioDataPreview = forwardRef<HTMLDivElement, Props>(({ data }, ref) 
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8 pt-4 border-t border-gold/40">
-          <div className="text-gold text-lg">✦ ✦ ✦</div>
+        <div className="text-center mt-4 pt-2 border-t border-gold/40">
+          <div className="text-gold text-base">✦ ✦ ✦</div>
         </div>
       </div>
     </div>

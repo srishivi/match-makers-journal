@@ -54,15 +54,22 @@ const Index = () => {
       const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgRatio = canvas.height / canvas.width;
-      let imgWidth = pageWidth;
-      let imgHeight = imgWidth * imgRatio;
-      if (imgHeight > pageHeight) {
+      const canvasRatio = canvas.width / canvas.height; // w/h
+      const pageRatio = pageWidth / pageHeight;
+      let imgWidth: number;
+      let imgHeight: number;
+      if (canvasRatio > pageRatio) {
+        // limited by width
+        imgWidth = pageWidth;
+        imgHeight = pageWidth / canvasRatio;
+      } else {
+        // limited by height — fit fully on one page
         imgHeight = pageHeight;
-        imgWidth = imgHeight / imgRatio;
+        imgWidth = pageHeight * canvasRatio;
       }
       const x = (pageWidth - imgWidth) / 2;
-      pdf.addImage(imgData, "JPEG", x, 0, imgWidth, imgHeight);
+      const y = (pageHeight - imgHeight) / 2;
+      pdf.addImage(imgData, "JPEG", x, y, imgWidth, imgHeight);
       const filename = `${(data.name || "bio-data").replace(/\s+/g, "_")}_BioData.pdf`;
       pdf.save(filename);
       toast.success("PDF downloaded");
